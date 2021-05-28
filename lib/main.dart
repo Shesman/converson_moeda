@@ -124,7 +124,7 @@ class _HomeState extends State<Home> {
                 euro = snapshot.data["results"]["currencies"]["EUR"]["buy"];
 
                 return SingleChildScrollView(
-                  padding: EdgeInsets.all(40),
+                  padding: EdgeInsets.all(50),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: <Widget>[
@@ -173,7 +173,7 @@ Widget buildTextField(
     ),
     style: TextStyle(
       color: Colors.purple[700],
-      fontSize: 25,
+      fontSize: 23,
     ),
     keyboardType: TextInputType.numberWithOptions(decimal: true),
     onChanged: f,
