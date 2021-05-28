@@ -6,25 +6,23 @@ import 'dart:convert';
 
 const request = "https://api.hgbrasil.com/finance?format=json&key=f0e30dac";
 
-void main() async{
-
+void main() async {
   print(await getData());
 
   runApp(MaterialApp(
-    home:  Home(),
+    home: Home(),
     debugShowCheckedModeBanner: false,
     theme: ThemeData(
-      hintColor: Colors.amber,
+      hintColor: Colors.purple[700],
       primaryColor: Colors.white,
     ),
   ));
-} 
+}
 
 Future<Map> getData() async {
   http.Response response = await http.get(request);
   return json.decode(response.body);
 }
-
 
 class Home extends StatefulWidget {
   @override
@@ -32,7 +30,6 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
-
   final realControler = TextEditingController();
   final dolarControler = TextEditingController();
   final euroControler = TextEditingController();
@@ -40,36 +37,36 @@ class _HomeState extends State<Home> {
   double dolar;
   double euro;
 
-  void _clearAll(){
+  void _clearAll() {
     realControler.text = "";
     dolarControler.text = "";
     euroControler.text = "";
   }
 
-  void _realChanged(String text){
-    if(text.isEmpty){
+  void _realChanged(String text) {
+    if (text.isEmpty) {
       _clearAll();
       return;
     }
 
     double real = double.parse(text);
     dolarControler.text = (real / dolar).toStringAsFixed(2);
-    euroControler.text = (real / euro).toStringAsFixed(2);    
+    euroControler.text = (real / euro).toStringAsFixed(2);
   }
 
-  void _dolarChanged(String text){
-    if(text.isEmpty){
+  void _dolarChanged(String text) {
+    if (text.isEmpty) {
       _clearAll();
       return;
     }
 
-    double dolar = double.parse(text);    
+    double dolar = double.parse(text);
     realControler.text = (dolar * this.dolar).toStringAsFixed(2);
-    euroControler.text = (dolar *this.dolar / euro).toStringAsFixed(2);
+    euroControler.text = (dolar * this.dolar / euro).toStringAsFixed(2);
   }
 
-   void _euroChanged(String text){
-     if(text.isEmpty){
+  void _euroChanged(String text) {
+    if (text.isEmpty) {
       _clearAll();
       return;
     }
@@ -77,76 +74,84 @@ class _HomeState extends State<Home> {
     double euro = double.parse(text);
     realControler.text = (euro * this.euro).toStringAsFixed(2);
     dolarControler.text = (euro * this.euro / dolar).toStringAsFixed(2);
-
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.black,
+      backgroundColor: Colors.grey[100],
       appBar: AppBar(
-        title: Text("\$ Conversor \$"),
-        backgroundColor: Colors.amber,
+        title: Text(
+          "\$ Conversor \$",
+          style: TextStyle(
+            color: Colors.white,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        backgroundColor: Colors.purple[700],
         centerTitle: true,
       ),
       body: FutureBuilder<Map>(
         future: getData(),
-        builder: (context, snapshot){
-          switch(snapshot.connectionState){
+        builder: (context, snapshot) {
+          switch (snapshot.connectionState) {
             case ConnectionState.none:
             case ConnectionState.waiting:
               return Center(
                 child: Text(
                   "Carregando Dados...",
                   style: TextStyle(
-                    color: Colors.amber,
-                    fontSize: 25.0,                    
+                    color: Colors.purple[700],
+                    fontSize: 25.0,
                   ),
                   textAlign: TextAlign.center,
                 ),
               );
-          default:
-            if (snapshot.hasError){
-               return Center(
-                child: Text(
-                  "Erro ao carregar Dados :(",
-                  style: TextStyle(
-                    color: Colors.amber,
-                    fontSize: 25.0,                    
+            default:
+              if (snapshot.hasError) {
+                return Center(
+                  child: Text(
+                    "Erro ao carregar Dados :(",
+                    style: TextStyle(
+                      color: Colors.purple[700],
+                      fontSize: 25.0,
+                    ),
+                    textAlign: TextAlign.center,
                   ),
-                  textAlign: TextAlign.center,
-                ),
-              );
-            } else {
-              dolar = snapshot.data["results"]["currencies"]["USD"]["buy"];
-              euro = snapshot.data["results"]["currencies"]["EUR"]["buy"];
+                );
+              } else {
+                dolar = snapshot.data["results"]["currencies"]["USD"]["buy"];
+                euro = snapshot.data["results"]["currencies"]["EUR"]["buy"];
 
-              return SingleChildScrollView(
-                padding: EdgeInsets.all(40),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: <Widget>[
-                    Icon (
-                      Icons.monetization_on,
-                      size: 150,
-                      color: Colors.amber,
-                    ),
-                    SizedBox(
-                      height: 25,
-                    ),
-                    buildTextField("Reais", "R\$  ", realControler, _realChanged),
-                    SizedBox(
-                      height: 25,
-                    ),
-                    buildTextField("Dolares", "US\$  ", dolarControler, _dolarChanged),
-                    SizedBox(
-                      height: 25,
-                    ),
-                    buildTextField("Euros", "€  ", euroControler, _euroChanged),                    
-                  ],
-                ),
-              );
-            }
+                return SingleChildScrollView(
+                  padding: EdgeInsets.all(40),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: <Widget>[
+                      Icon(
+                        Icons.monetization_on,
+                        size: 140,
+                        color: Colors.purple[700],
+                      ),
+                      SizedBox(
+                        height: 25,
+                      ),
+                      buildTextField(
+                          "Reais", "R\$  ", realControler, _realChanged),
+                      SizedBox(
+                        height: 25,
+                      ),
+                      buildTextField(
+                          "Dolares", "US\$  ", dolarControler, _dolarChanged),
+                      SizedBox(
+                        height: 25,
+                      ),
+                      buildTextField(
+                          "Euros", "€  ", euroControler, _euroChanged),
+                    ],
+                  ),
+                );
+              }
           }
         },
       ),
@@ -154,20 +159,22 @@ class _HomeState extends State<Home> {
   }
 }
 
-Widget buildTextField(String label, String prefix, TextEditingController c, Function f){
+Widget buildTextField(
+    String label, String prefix, TextEditingController c, Function f) {
   return TextField(
     controller: c,
     decoration: InputDecoration(
       labelText: label,
       labelStyle: TextStyle(
-        color: Colors.amber,
+        color: Colors.purple[700],
       ),
       border: OutlineInputBorder(),
-        prefixText: prefix, 
+      prefixText: prefix,
     ),
     style: TextStyle(
-      color: Colors.amber, fontSize: 25,
-      ),
+      color: Colors.purple[700],
+      fontSize: 25,
+    ),
     keyboardType: TextInputType.numberWithOptions(decimal: true),
     onChanged: f,
   );
